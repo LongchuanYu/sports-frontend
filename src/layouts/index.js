@@ -1,124 +1,104 @@
-import { 
-  TabBar,
-  
- } from 'antd-mobile';
-import router from 'umi/router'
-import React from 'react'
-import 'antd-mobile/dist/antd-mobile.css';
+import styles from './index.css';
+import React from 'react';
+import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import { orange, purple } from '@material-ui/core/colors';
 
+const useStyles = makeStyles({
+  root: {
+    position: "fixed",
+    height: "50px",
+    bottom: "0px",
+    left: "0px",
+    right: "0px",
+    marginBottom: "0px"
+  },
+});
 
-class BasicLayout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTab: 'training',
-      hidden: false,
-      fullScreen: false,
-    };
-  }
+export default function BasicLayout() {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+  const theme = createMuiTheme({
+    primary: {
+      // Purple and green play nicely together.
+      main: purple[500],
+    },
+    secondary: {
+      // This is green.A700 as hex.
+      main: '#11cb5f',
+    },
+  });
+  return (
 
-  renderContent() {
-    return (
-      // <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
-      //   {this.props.children}
-      // </div>
-      <div >
-        {this.props.children}
-      </div>
-    );
-  }
+    <ThemeProvider theme={theme}>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>{value}</div>
+      <div>1</div>
+      <BottomNavigation
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        showLabels
+        className={classes.root}
+      >
+        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+        <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+        <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+      </BottomNavigation>
+      
+    </ThemeProvider>
 
-  render() {
-    return (
-      <div style={{position: 'fixed', height: '100%', width: '100%', top: 0}}>
-        <TabBar
-          unselectedTintColor="#949494"
-          tintColor="#33A3F4"
-          barTintColor="white"
-          hidden={this.state.hidden}
-        >
-
-
-
-          <TabBar.Item
-            title="训练"
-            key="Training"
-            icon={<div style={{
-              width: '22px',
-              height: '22px',
-              background: 'url(https://zos.alipayobjects.com/rmsportal/sifuoDUQdAFKAVcFGROC.svg) center center /  21px 21px no-repeat' }}
-            />
-            }
-            selectedIcon={<div style={{
-              width: '22px',
-              height: '22px',
-              background: 'url(https://zos.alipayobjects.com/rmsportal/iSrlOTqrKddqbOmlvUfq.svg) center center /  21px 21px no-repeat' }}
-            />
-            }
-            selected={this.state.selectedTab === 'training'}
-            onPress={() => {
-              router.push('/training')
-              this.setState({
-                selectedTab: 'training',
-              });
-            }}
-            data-seed="logId"
-          >
-            {this.renderContent()}
-          </TabBar.Item>
-
-
-
-          <TabBar.Item
-            icon={
-              <div style={{
-                width: '22px',
-                height: '22px',
-                background: 'url(https://gw.alipayobjects.com/zos/rmsportal/BTSsmHkPsQSPTktcXyTV.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            selectedIcon={
-              <div style={{
-                width: '22px',
-                height: '22px',
-                background: 'url(https://gw.alipayobjects.com/zos/rmsportal/ekLecvKBnRazVLXbWOnE.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            title="数据"
-            key="Data"
-            selected={this.state.selectedTab === 'data'}
-            onPress={() => {
-              router.push('/data')
-              this.setState({
-                selectedTab: 'data',
-              });
-            }}
-            data-seed="logId1"
-          >
-            {this.renderContent()}
-          </TabBar.Item>
-
-
-
-          <TabBar.Item
-            icon={{ uri: 'https://zos.alipayobjects.com/rmsportal/asJMfBrNqpMMlVpeInPQ.svg' }}
-            selectedIcon={{ uri: 'https://zos.alipayobjects.com/rmsportal/gjpzzcrPMkhfEqgbYvmN.svg' }}
-            title="我的"
-            key="my"
-            selected={this.state.selectedTab === 'my'}
-            onPress={() => {
-              router.push('/my')
-              this.setState({
-                selectedTab: 'my',
-              });
-            }}
-          >
-            {this.renderContent()}
-          </TabBar.Item>
-        </TabBar>
-      </div>
-    );
-  }
+  );
 }
-
-export default BasicLayout;
