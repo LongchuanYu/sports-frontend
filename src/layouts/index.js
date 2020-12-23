@@ -1,12 +1,16 @@
 import styles from './index.css';
 import React from 'react';
+import { history } from 'umi';
+
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import Button from '@material-ui/core/Button'
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { orange, purple } from '@material-ui/core/colors';
+import { orange, purple, light } from '@material-ui/core/colors';
+import { dark } from '@material-ui/core/styles/createPalette';
 
 const useStyles = makeStyles({
   root: {
@@ -19,72 +23,17 @@ const useStyles = makeStyles({
   },
 });
 
-export default function BasicLayout() {
+export default function BasicLayout(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const theme = createMuiTheme({
-    primary: {
-      // Purple and green play nicely together.
-      main: purple[500],
-    },
-    secondary: {
-      // This is green.A700 as hex.
-      main: '#11cb5f',
-    },
+    palette: {
+      type: "dark",
+    }
   });
   return (
 
     <ThemeProvider theme={theme}>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>{value}</div>
-      <div>1</div>
       <BottomNavigation
         value={value}
         onChange={(event, newValue) => {
@@ -93,12 +42,27 @@ export default function BasicLayout() {
         showLabels
         className={classes.root}
       >
-        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+        <BottomNavigationAction label="训练" icon={<RestoreIcon />} />
+        <BottomNavigationAction label="数据" icon={<FavoriteIcon />} />
+        <BottomNavigationAction label="我的" icon={<LocationOnIcon />} />
       </BottomNavigation>
-      
+      {renderContene(value)}
     </ThemeProvider>
-
   );
+}
+
+const renderContene = function(value){
+  switch(value){
+    case 0:
+      history.push('/training')
+    case 1:
+      return (
+        <div>1</div>
+      )
+    case 2:
+      return(
+        <div>2</div>
+      )
+  }
+
 }
