@@ -1,16 +1,13 @@
 import styles from './index.css';
-import React from 'react';
-import { history } from 'umi';
+import React, { useEffect } from 'react';
+import { router } from 'umi';
 
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import Button from '@material-ui/core/Button'
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { orange, purple, light } from '@material-ui/core/colors';
-import { dark } from '@material-ui/core/styles/createPalette';
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +28,20 @@ export default function BasicLayout(props) {
       type: "dark",
     }
   });
+  useEffect(()=>{
+    console.log(value)
+    switch(value){
+      case 0:
+        router.push('/training');
+        break;
+      case 1:
+        router.push('/data');
+        break;
+      case 2:
+        router.push('/myself');
+        break;
+    }
+  },[value])
   return (
 
     <ThemeProvider theme={theme}>
@@ -46,23 +57,7 @@ export default function BasicLayout(props) {
         <BottomNavigationAction label="数据" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="我的" icon={<LocationOnIcon />} />
       </BottomNavigation>
-      {renderContene(value)}
+      {props.children}
     </ThemeProvider>
   );
-}
-
-const renderContene = function(value){
-  switch(value){
-    case 0:
-      history.push('/training')
-    case 1:
-      return (
-        <div>1</div>
-      )
-    case 2:
-      return(
-        <div>2</div>
-      )
-  }
-
 }
