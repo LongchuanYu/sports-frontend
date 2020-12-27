@@ -1,0 +1,29 @@
+.container {
+    padding: 16px;
+}
+
+.card_subFontSize {
+    font-size: 0.75rem;
+}
+
+.card_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    
+}
+
+.card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card_content {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.selected_action {
+    background: cadetblue;
+}

@@ -21,15 +21,15 @@ const useStyles = makeStyles({
 });
 
 export default function BasicLayout(props) {
+
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(-1);
   const theme = createMuiTheme({
     palette: {
-      type: "dark",
+      type: "dark"
     }
   });
   useEffect(()=>{
-    console.log(value)
     switch(value){
       case 0:
         router.push('/training');
@@ -40,8 +40,25 @@ export default function BasicLayout(props) {
       case 2:
         router.push('/myself');
         break;
+      case -1:
+        router.push(props.location.pathname)
+        break;
     }
-  },[value])
+  },[props.location.pathname, value])
+
+  if(props.location.pathname === '/actions'){
+    return (
+      <>
+        {props.children}
+      </>
+    )
+  }else if(props.location.pathname === '/login'){
+    return (
+      <>
+        {props.children}
+      </>
+    )
+  }
   return (
 
     <ThemeProvider theme={theme}>

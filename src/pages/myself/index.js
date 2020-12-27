@@ -1,5 +1,5 @@
-export default function Myself(){
-    return (
-        <div>Myself</div>
-    )
+export default function Myself() {
+  return (
+    <div>Myself</div>
+  )
 }
