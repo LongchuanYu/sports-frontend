@@ -20,7 +20,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function BasicLayout(props) {
+const routes = ['/training', '/data', '/myself']
+
+export default function BasicLayout(props) {  
 
   const classes = useStyles();
   const [value, setValue] = React.useState(-1);
@@ -30,35 +32,10 @@ export default function BasicLayout(props) {
     }
   });
   useEffect(()=>{
-    switch(value){
-      case 0:
-        router.push('/training');
-        break;
-      case 1:
-        router.push('/data');
-        break;
-      case 2:
-        router.push('/myself');
-        break;
-      case -1:
-        router.push(props.location.pathname)
-        break;
-    }
-  },[props.location.pathname, value])
+    router.push(routes[value])
+  },[value])
 
-  if(props.location.pathname === '/actions'){
-    return (
-      <>
-        {props.children}
-      </>
-    )
-  }else if(props.location.pathname === '/login'){
-    return (
-      <>
-        {props.children}
-      </>
-    )
-  }
+  
   return (
 
     <ThemeProvider theme={theme}>
