@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import axios from '../../axios/index.js'
-import sty from './index.css'
+import styles from './index.css'
 
 import {
 	CardContent, Card, IconButton, Drawer,
@@ -125,8 +125,8 @@ export default function Training() {
         return (
           <Card className={`mb-3`} key={`card-${index}`}>
             <CardContent>
-              <div className={sty.card_wrapper}>
-                <div className={`${sty.card_header} mb-4`}>
+              <div className={styles.card_wrapper}>
+                <div className={`${styles.card_header} mb-3`}>
                   <div className={`font-weight-bold`}>{item.label}</div>
 
                   <IconButton style={{marginLeft: 'auto'}} onClick={()=>deleteCard(index)}>
@@ -140,7 +140,7 @@ export default function Training() {
                 {/* Record list */}
                 {item.values.map((value, value_index)=>{
                   return (
-                    <div className={`${sty.card_content} ${sty.card_subFontSize} mb-2`} key={`value-${value_index}`}>
+                    <div className={`${styles.card_content} ${styles.card_subFontSize} mb-2`} key={`value-${value_index}`}>
                       <div className={'mr-3'}>
                         <OutlinedInput
                           readOnly

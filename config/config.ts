@@ -39,7 +39,7 @@ export default defineConfig({
         }
         const match = context.resourcePath.match(/src(.*)/);
         if (match && match[1]) {
-          const antdProPath = match[1].replace('.less', '');
+          const antdProPath = match[1].replace('.css', '');
           const arr = winPath(antdProPath)
             .split('/')
             .map((a: string) => a.replace(/([A-Z])/g, '-$1'))
