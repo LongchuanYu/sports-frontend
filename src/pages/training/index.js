@@ -1,23 +1,19 @@
 import React, { useEffect } from 'react';
 import axios from '../../axios/index.js'
-import { router } from 'umi';
 import sty from './index.css'
 
 import {
-	CardContent, CardActions, Card, Select, IconButton, Icon, Drawer,
-  List, ListItem, ListItemText, ListSubheader, Divider, Chip,
-  Menu, MenuItem, Input, InputAdornment, OutlinedInput,
-  Snackbar, Alert
+	CardContent, Card, IconButton, Drawer,
+  List, ListItem, ListSubheader, Divider, Chip,
+  Menu, MenuItem, InputAdornment, OutlinedInput
 
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import DoneIcon from '@material-ui/icons/Done';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const useStyles = makeStyles({
   inputStyle: {
@@ -38,14 +34,11 @@ const useStyles = makeStyles({
 
 export default function Training() {
   const [actionsList, setActionsList] = React.useState([])
-  
+
 	const [showActionsLib, setShowActionsLib] = React.useState(false)
   const [selectedActionsLibIndex, setSelectedActionsLibIndex] = React.useState([])
   const [actionsLib, setActionsLib] = React.useState([])
-  const [confirmedActionsList, setConfirmedActionsList] = React.useState([])
-
   const [actionsOffset, setActionOffset] = React.useState([0,0])
-  
   const [anchorWeight, setAnchorWeight] = React.useState(null);
   const [anchorNum, setAnchorNum] = React.useState(null);
   const openWeight = Boolean(anchorWeight);
@@ -123,12 +116,11 @@ export default function Training() {
 	}
 
 	const confirmActions = () => {
-    setConfirmedActionsList(selectedActionsLibIndex)
 		closeActionsLib(1)
   }
-  
+
 	return (
-		<div className={sty.container}>
+		<div className="container">
       {actionsList.map((item, index)=>{
         return (
           <Card className={`mb-3`} key={`card-${index}`}>
@@ -138,19 +130,19 @@ export default function Training() {
                   <div className={`font-weight-bold`}>{item.label}</div>
 
                   <IconButton style={{marginLeft: 'auto'}} onClick={()=>deleteCard(index)}>
-                        <DeleteOutlineIcon></DeleteOutlineIcon>
+                        <DeleteOutlineIcon />
                       </IconButton>
                   <IconButton size='small' onClick={()=>addRecords(index)}>
                     <AddCircleOutlineIcon />
                   </IconButton>
                 </div>
-    
+
                 {/* Record list */}
                 {item.values.map((value, value_index)=>{
                   return (
                     <div className={`${sty.card_content} ${sty.card_subFontSize} mb-2`} key={`value-${value_index}`}>
                       <div className={'mr-3'}>
-                        <OutlinedInput 
+                        <OutlinedInput
                           readOnly
                           size="small"
                           value={value.weight}
@@ -164,9 +156,9 @@ export default function Training() {
                         >
                         </OutlinedInput>
                       </div>
-      
+
                       <div className={'mr-3'}>
-                        <OutlinedInput 
+                        <OutlinedInput
                           readOnly
                           size="small"
                           value={value.numbers}
@@ -179,9 +171,9 @@ export default function Training() {
                         >
                           </OutlinedInput>
                       </div>
-      
+
                       <IconButton style={{marginLeft: 'auto'}} size='small' onClick={()=>deleteRecord(index, value_index)}>
-                        <DeleteOutlineIcon fontSize='small'></DeleteOutlineIcon>
+                        <DeleteOutlineIcon fontSize='small'/>
                       </IconButton>
                     </div>
                   )
@@ -260,18 +252,18 @@ export default function Training() {
 						<li>
 							<ul style={{padding:0}}>
 								<ListSubheader style={{
-									background:'#424242', 
+									background:'#424242',
 									display:'flex', justifyContent: 'space-between', alignItems: 'center'
 								}}>
                   <Chip label={selectedActionsLibIndex.length} />
 									<IconButton onClick={()=>confirmActions()}>
-										<DoneIcon fontSize='small'></DoneIcon>
+										<DoneIcon fontSize='small'/>
 									</IconButton>
 								</ListSubheader>
 								<Divider />
 								{actionsLib.map((item, index)=>[
-									<ListItem 
-									key={index} 
+									<ListItem
+									key={index}
 									dense
                   button
                   style={selectedActionsLibIndex.indexOf(index)!==-1?{backgroundColor:'cadetblue'}:null}

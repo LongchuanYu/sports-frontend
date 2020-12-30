@@ -21,9 +21,10 @@ const useStyles = makeStyles({
 });
 
 const routes = ['/', '/training', '/data', '/myself']
+const sty_routes = ['/mysty/sty-dva']
 
 export default function BasicLayout(props) {
-
+  console.log(props)
   const classes = useStyles();
   // 等于didMounted
   const pathname = props.location.pathname;
@@ -36,6 +37,15 @@ export default function BasicLayout(props) {
   if(pathname === '/login'){
     // login
     return (
+      <React.Fragment>
+        {props.children}
+      </React.Fragment>
+    )
+  }
+
+  if(sty_routes.indexOf(pathname) >= 0){
+    // test
+    return(
       <React.Fragment>
         {props.children}
       </React.Fragment>

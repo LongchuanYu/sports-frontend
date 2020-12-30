@@ -5,6 +5,4 @@ function Data(){
     )
 }
 
-Data.wrappers = ['@/wrappers/auth']
-
 export default Data
