@@ -5,6 +5,6 @@ function Data(){
     )
 }
 
-// Data.wrappers = ['@/wrappers/auth']
+Data.wrappers = ['@/wrappers/auth']
 
 export default Data

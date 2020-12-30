@@ -6,10 +6,10 @@ function useAuth(){
         return false
     }
 }
-console.log('auth....')
+
 export default (props) => {
   console.log('auth....')
-  const isLogin = false
+  const isLogin = useAuth()
   if (isLogin) {
     return <div>{ props.children }</div>;
   } else {

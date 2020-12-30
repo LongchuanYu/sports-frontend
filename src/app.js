@@ -1,8 +1,6 @@
-export const dva = {
-  config: {
-    onError(err) {
-      err.preventDefault();
-      console.error(err.message);
-    },
-  },
-};
+export function patchRoutes({ routes }) {
+  routes[0].routes.push({
+    path: '*',
+    component: require('@/pages/404').default,
+  });
+}

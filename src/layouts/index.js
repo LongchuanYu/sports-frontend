@@ -1,6 +1,6 @@
 import styles from './index.css';
 import React, { useEffect } from 'react';
-import { router } from 'umi';
+import { Redirect, history } from 'umi'
 
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
@@ -20,36 +20,42 @@ const useStyles = makeStyles({
   },
 });
 
-const routes = ['/training', '/data', '/myself']
+const routes = ['/', '/training', '/data', '/myself']
 
-export default function BasicLayout(props) {  
+export default function BasicLayout(props) {
 
   const classes = useStyles();
-  const [value, setValue] = React.useState(-1);
+  // 等于didMounted
+  const pathname = props.location.pathname;
   const theme = createMuiTheme({
     palette: {
       type: "dark"
     }
   });
-  useEffect(()=>{
-    router.push(routes[value])
-  },[value])
 
-  
+  if(pathname === '/login'){
+    // login
+    return (
+      <React.Fragment>
+        {props.children}
+      </React.Fragment>
+    )
+  }
+
   return (
-
     <ThemeProvider theme={theme}>
       <BottomNavigation
-        value={value}
+        value={pathname}
         onChange={(event, newValue) => {
-          setValue(newValue);
+          history.push(newValue)
+          // setLink(newValue);
         }}
         showLabels
         className={classes.root}
       >
-        <BottomNavigationAction label="训练" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="数据" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="我的" icon={<LocationOnIcon />} />
+        <BottomNavigationAction value={'/training'} label="训练" icon={<RestoreIcon />} />
+        <BottomNavigationAction value={'/data'} label="数据" icon={<FavoriteIcon />} />
+        <BottomNavigationAction value={'/myself'} label="我的" icon={<LocationOnIcon />} />
       </BottomNavigation>
       {props.children}
     </ThemeProvider>

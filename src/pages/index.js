@@ -3,8 +3,8 @@ import React from 'react'
 import Training from './training'
 export default function() {
   return (
-    <>
-    <Training></Training>
-    </>
+    <React.Fragment>
+    <Training/>
+    </React.Fragment>
   );
 }
