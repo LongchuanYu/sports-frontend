@@ -19,6 +19,9 @@ export default defineConfig({
   },
   // 暂时关闭
   pwa: false,
+  alias: {
+    '@': require('path').resolve(__dirname, 'src'),
+  },
   lessLoader: { javascriptEnabled: true },
   cssLoader: {
     // 这里的 modules 可以接受 getLocalIdent
