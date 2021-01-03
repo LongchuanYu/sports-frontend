@@ -8,6 +8,7 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
+  mock: false,
   locale: {
     default: 'zh-CN',
     baseNavigator: true,

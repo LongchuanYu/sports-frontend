@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
 import axios from '../../axios/index.js'
 import styles from './index.css'
-
+import Alerts from '@/components/Alerts'
+import moment from 'moment'
 import {
 	CardContent, Card, IconButton, Drawer,
   List, ListItem, ListSubheader, Divider, Chip,
-  Menu, MenuItem, InputAdornment, OutlinedInput
-
+  Menu, MenuItem, InputAdornment, OutlinedInput,
+  CircularProgress
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import DoneIcon from '@material-ui/icons/Done';
 
 const useStyles = makeStyles({
@@ -30,32 +32,46 @@ const useStyles = makeStyles({
   }
 });
 
-
+const SET_ACTIONS_LIST = true;
 
 export default function Training() {
   const [actionsList, setActionsList] = React.useState([])
-
 	const [showActionsLib, setShowActionsLib] = React.useState(false)
   const [selectedActionsLibIndex, setSelectedActionsLibIndex] = React.useState([])
   const [actionsLib, setActionsLib] = React.useState([])
   const [actionsOffset, setActionOffset] = React.useState([0,0])
   const [anchorWeight, setAnchorWeight] = React.useState(null);
   const [anchorNum, setAnchorNum] = React.useState(null);
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const openWeight = Boolean(anchorWeight);
   const openNum = Boolean(anchorNum);
 
   const classes = useStyles();
 
-  const url = '/api/training'
+  const url = '/actions'
 
   useEffect(()=>{
     // 实现componentDidMount
-    axios.get(url).then(res=>{
-      setActionsList(res.data)
+    axios.get(url, {
+      params:{
+        datetime: moment().format("YYYY-MM-DD")
+      }
+    }).then(res=>{
+      if(res && res.data){
+        setActionsList(res.data.mydata)
+      }
+    }).catch(e=>{
+      const status = e?.response?.status;
+      if (status === 401){
+        Alerts.show('Unauthorized...')
+      }else if(status === 404){
+      }else {
+        Alerts.show('Unknow error...')
+      }
     })
   },[url])
 
-  const mockWeight = [...new Array(50).keys()]
+  const mockWeight = [...new Array(200).keys()]
   const mockNumbers = [5, 10, 15, 20, 25, 30, 35, 40]
 
   // Functions
@@ -66,7 +82,7 @@ export default function Training() {
       weight: 0,
       numbers: 0
     })
-    setActionsList(newActionsList)
+    request_append_actions(SET_ACTIONS_LIST, newActionsList);
   }
 
   const deleteRecord = (index, value_idx) => {
@@ -75,32 +91,26 @@ export default function Training() {
       return
     }
     newActionsList[index].values.splice(value_idx, 1)
-    setActionsList(newActionsList)
+    request_append_actions(SET_ACTIONS_LIST, newActionsList);
   }
 
   const deleteCard = (index) => {
     const newActionsList = [...actionsList]
     newActionsList.splice(index, 1)
-    setActionsList(newActionsList)
+    request_append_actions(SET_ACTIONS_LIST, newActionsList);
   }
 
 	const openActionsLib = function(){
-    axios.get('/api/training/actions-lib').then(res=>{
+    axios.get('/actions-lib').then(res=>{
       setActionsLib(res.data)
-    })
+    }).catch(e=>[
+      Alerts.show("Network error.")
+    ])
     setSelectedActionsLibIndex([])
 		setShowActionsLib(true)
 	}
 
 	const closeActionsLib = function(isConfirm){
-    if(isConfirm){
-      // 把选择的(selectedActionsLibIndex)加入到actionsList中
-      const newActionsList = [...actionsList]
-      selectedActionsLibIndex.forEach(index=>{
-        newActionsList.push(actionsLib[index])
-      })
-      setActionsList(newActionsList)
-    }
 		setShowActionsLib(false)
 	}
 
@@ -116,12 +126,63 @@ export default function Training() {
 	}
 
 	const confirmActions = () => {
+    if (!selectedActionsLibIndex.length){
+      closeActionsLib(1)
+      return;
+    }
+    const newActionsList = [...actionsList]
+
+    selectedActionsLibIndex.forEach(index=>{
+      newActionsList.push(actionsLib[index])
+    })
+    request_append_actions(SET_ACTIONS_LIST, newActionsList)
 		closeActionsLib(1)
+  }
+
+  // Handle Menu Items
+  const handleWeight = (weight) =>{
+    const [card_idx, value_idx] = actionsOffset
+    const newActionsList = [...actionsList]
+    // console.log(card_idx, value_idx)
+    // console.log(newActionsList)
+    // console.log(newActionsList[card_idx].values[value_idx])
+    newActionsList[card_idx].values[value_idx].weight = weight
+    request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setAnchorWeight(null)
+  }
+
+  const handleNum = (numbers) =>{
+    const [card_idx, value_idx] = actionsOffset
+    const newActionsList = [...actionsList]
+    newActionsList[card_idx].values[value_idx].numbers = numbers
+    request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setAnchorNum(null)
+  }
+
+  // Request
+  const request_append_actions = (isSetActions, actions_list, timestamp='') => {
+    const message = {
+      timestamp: timestamp ? timestamp : moment().format("YYYY-MM-DD"),
+      mydata: actions_list
+    }
+    axios.post('/actions', message).then(resp=>{
+      if(isSetActions){
+        setActionsList(actions_list)
+      }
+    }).catch(e=>{
+      const status = e?.response?.status;
+      if (status === 401){
+        Alerts.show('Unauthorized error.')
+      }else{
+        Alerts.show('Save failed...')
+      }
+      
+    })
   }
 
 	return (
 		<div className="container">
-      {actionsList.map((item, index)=>{
+      {actionsList && actionsList.length ? actionsList.map((item, index)=>{
         return (
           <Card className={`mb-3`} key={`card-${index}`}>
             <CardContent>
@@ -130,8 +191,8 @@ export default function Training() {
                   <div className={`font-weight-bold`}>{item.label}</div>
 
                   <IconButton style={{marginLeft: 'auto'}} onClick={()=>deleteCard(index)}>
-                        <DeleteOutlineIcon />
-                      </IconButton>
+                    <DeleteOutlineIcon />
+                  </IconButton>
                   <IconButton size='small' onClick={()=>addRecords(index)}>
                     <AddCircleOutlineIcon />
                   </IconButton>
@@ -182,7 +243,7 @@ export default function Training() {
             </CardContent>
           </Card>
         )
-      })}
+      }) : ''}
 
 
       {/* Menu Weight */}
@@ -201,16 +262,7 @@ export default function Training() {
       >
         {mockWeight.map((weight, index)=>{
           return(
-            <MenuItem key={index} onClick={()=>{
-              const [card_idx, value_idx] = actionsOffset
-              const newActionsList = [...actionsList]
-              // console.log(card_idx, value_idx)
-              // console.log(newActionsList)
-              // console.log(newActionsList[card_idx].values[value_idx])
-              newActionsList[card_idx].values[value_idx].weight = weight
-              setActionsList(newActionsList)
-              setAnchorWeight(null)
-            }}>
+            <MenuItem key={index} onClick={()=>{handleWeight(weight)}}>
               {weight}
             </MenuItem>
           )
@@ -233,13 +285,7 @@ export default function Training() {
       >
         {mockNumbers.map((numbers, index)=>{
           return(
-            <MenuItem key={index} onClick={()=>{
-              const [card_idx, value_idx] = actionsOffset
-              const newActionsList = [...actionsList]
-              newActionsList[card_idx].values[value_idx].numbers = numbers
-              setActionsList(newActionsList)
-              setAnchorNum(null)
-            }}>
+            <MenuItem key={index} onClick={()=>handleNum(numbers)}>
               {numbers}
             </MenuItem>
           )
@@ -252,7 +298,7 @@ export default function Training() {
 						<li>
 							<ul style={{padding:0}}>
 								<ListSubheader style={{
-									background:'#424242',
+									background: 'inherited',
 									display:'flex', justifyContent: 'space-between', alignItems: 'center'
 								}}>
                   <Chip label={selectedActionsLibIndex.length} />
@@ -278,8 +324,10 @@ export default function Training() {
 			</Drawer>
 
 
-			<div onClick={openActionsLib} style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-				Add
+			<div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+        <IconButton onClick={openActionsLib} size="medium">
+          <AddBoxIcon color="primary" size="large"/>
+        </IconButton>
 			</div>
 		</div>
 	)

@@ -1,6 +1,7 @@
 import styles from './index.css';
 import React, { useEffect } from 'react';
 import { Redirect, history } from 'umi'
+import {connect} from 'dva'
 
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
@@ -8,6 +9,7 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import {blue, teal, purple, indigo, grey} from '@material-ui/core/colors';
 
 const useStyles = makeStyles({
   root: {
@@ -23,25 +25,22 @@ const useStyles = makeStyles({
 const routes = ['/', '/training', '/data', '/myself']
 const sty_routes = ['/mysty/sty-dva']
 
-export default function BasicLayout(props) {
-  console.log(props)
+function BasicLayout(props) {
+  const {dispatch} = props;
   const classes = useStyles();
   // 等于didMounted
   const pathname = props.location.pathname;
   const theme = createMuiTheme({
     palette: {
-      type: "dark"
+      type: 'dark',
+      primary: {
+        main: '#00b7ff'
+      },
+      secondary: purple
     }
   });
 
-  if(pathname === '/login'){
-    // login
-    return (
-      <React.Fragment>
-        {props.children}
-      </React.Fragment>
-    )
-  }
+  dispatch({type:"login/checkIsLogin"})
 
   if(sty_routes.indexOf(pathname) >= 0){
     // test
@@ -71,3 +70,5 @@ export default function BasicLayout(props) {
     </ThemeProvider>
   );
 }
+
+export default connect()(BasicLayout)

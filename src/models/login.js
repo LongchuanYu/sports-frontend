@@ -5,18 +5,51 @@ const Login = {
     username: undefined
   },
   effects: {
-    login({payload}){
-      localStorage.setItem("username", payload)
+    *login({payload}, {call, put}){
+      let [header, token_payload, signature] = payload.split('.');
+      let {username} = JSON.parse(atob(token_payload))
+      localStorage.setItem("isLogin", true)
+      localStorage.setItem("username", username)
+      localStorage.setItem("token", payload)
+      yield put({
+        type: 'setLogin',
+        payload: {
+          isLogin: true,
+          username: username
+        }
+      })
     },
-    logout(){
+    *logout({}, {call, put}){
+      localStorage.removeItem("isLogin")
       localStorage.removeItem("username")
+      localStorage.removeItem("token")
+      yield put({type: 'setLogout'})
+    },
+    *checkIsLogin({}, {call, put}){
+      let isLoginFlag = localStorage.getItem("isLogin")
+      let username = localStorage.getItem("username")
+      if (isLoginFlag) {
+        yield put({
+          type: 'setLogin',
+          payload: {
+            isLogin: true,
+            username: username
+          }
+        })
+      }else {
+        yield put({type: 'setLogout'})
+      }
     }
   },
   reducers: {
-    actionLogin(state, { payload }){
-      console.log(payload)
-      return {...state, isLogin: true, username: payload}
-    }
+    setLogin(state, {payload}){
+      const {isLogin, username} = payload;
+      return {...state, isLogin:isLogin, username:username}
+    },
+    setLogout(state){
+      return {...state, isLogin: false, username: undefined}
+    },
+
   }
 }
 export default Login;
