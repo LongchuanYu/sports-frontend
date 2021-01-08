@@ -20,6 +20,7 @@ const Login = {
       })
     },
     *logout({}, {call, put}){
+      console.log('logout!!!!')
       localStorage.removeItem("isLogin")
       localStorage.removeItem("username")
       localStorage.removeItem("token")
@@ -39,6 +40,9 @@ const Login = {
       }else {
         yield put({type: 'setLogout'})
       }
+    },
+    *test(){
+      console.log('test....')
     }
   },
   reducers: {

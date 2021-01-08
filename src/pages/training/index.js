@@ -9,7 +9,8 @@ import {
   Menu, MenuItem, InputAdornment, OutlinedInput,
   CircularProgress
 } from '@material-ui/core';
-
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers'
 import { makeStyles } from '@material-ui/core/styles';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
@@ -36,6 +37,7 @@ const SET_ACTIONS_LIST = true;
 
 export default function Training() {
   const [actionsList, setActionsList] = React.useState([])
+
 	const [showActionsLib, setShowActionsLib] = React.useState(false)
   const [selectedActionsLibIndex, setSelectedActionsLibIndex] = React.useState([])
   const [actionsLib, setActionsLib] = React.useState([])
@@ -45,6 +47,7 @@ export default function Training() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const openWeight = Boolean(anchorWeight);
   const openNum = Boolean(anchorNum);
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const classes = useStyles();
 
@@ -158,6 +161,10 @@ export default function Training() {
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
     setAnchorNum(null)
   }
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   // Request
   const request_append_actions = (isSetActions, actions_list, timestamp='') => {
@@ -323,8 +330,25 @@ export default function Training() {
 				</div>
 			</Drawer>
 
+      {/* Date picker */}
+
+
 
 			<div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+            variant="inline"
+            margin="normal"
+            id="date-picker-dialog"
+            format="MM/dd/yyyy"
+            value={selectedDate}
+            onChange={handleDateChange}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+      </MuiPickersUtilsProvider>
+
         <IconButton onClick={openActionsLib} size="medium">
           <AddBoxIcon color="primary" size="large"/>
         </IconButton>
