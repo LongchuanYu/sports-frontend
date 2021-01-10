@@ -19,10 +19,6 @@ function Myself(props) {
           <IsLoginComponents dispatch={dispatch} username={username}/> :
           <IsLogoutComponents />
         }
-        <Button variant="contained" onClick={()=>{
-          let ret = moment().format("YYYY-MM-DD");
-          console.log(ret)
-        }}>Test</Button>
       </div>
     </div>
   )

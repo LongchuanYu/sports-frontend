@@ -7,16 +7,19 @@ import {
 	CardContent, Card, IconButton, Drawer,
   List, ListItem, ListSubheader, Divider, Chip,
   Menu, MenuItem, InputAdornment, OutlinedInput,
-  CircularProgress
+  CircularProgress, Dialog, Badge
 } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
-import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers'
+import {MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers'
+
+
 import { makeStyles } from '@material-ui/core/styles';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import DoneIcon from '@material-ui/icons/Done';
+import DateRangeIcon from '@material-ui/icons/DateRange';
 
 const useStyles = makeStyles({
   inputStyle: {
@@ -30,24 +33,39 @@ const useStyles = makeStyles({
       padding: '10px 0',
       fontSize: '0.75rem'
     }
+  },
+  calendarStyle: {
+    '& .MuiBadge-badge': {
+      backgroundColor: '#eeeeee',
+      top: '30px',
+      right: '20px',
+      height: '1px'
+    }
   }
 });
 
 const SET_ACTIONS_LIST = true;
 
 export default function Training() {
+  // Actions
   const [actionsList, setActionsList] = React.useState([])
 
+  // Actions lib
 	const [showActionsLib, setShowActionsLib] = React.useState(false)
   const [selectedActionsLibIndex, setSelectedActionsLibIndex] = React.useState([])
   const [actionsLib, setActionsLib] = React.useState([])
-  const [actionsOffset, setActionOffset] = React.useState([0,0])
+  const [actionsOffset, setActionOffset] = React.useState([0,0]) // action(card) - item
+
+  // Card
   const [anchorWeight, setAnchorWeight] = React.useState(null);
   const [anchorNum, setAnchorNum] = React.useState(null);
-  const [isLoaded, setIsLoaded] = React.useState(false);
   const openWeight = Boolean(anchorWeight);
   const openNum = Boolean(anchorNum);
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  
+  // Date Picker
+  const [openDatePicker, setOpenDatePicker] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState(moment().format("YYYY-MM-DD"));
+  const [daysHaveActions, setDaysHaveActions] = React.useState([])
 
   const classes = useStyles();
 
@@ -55,23 +73,7 @@ export default function Training() {
 
   useEffect(()=>{
     // 实现componentDidMount
-    axios.get(url, {
-      params:{
-        datetime: moment().format("YYYY-MM-DD")
-      }
-    }).then(res=>{
-      if(res && res.data){
-        setActionsList(res.data.mydata)
-      }
-    }).catch(e=>{
-      const status = e?.response?.status;
-      if (status === 401){
-        Alerts.show('Unauthorized...')
-      }else if(status === 404){
-      }else {
-        Alerts.show('Unknow error...')
-      }
-    })
+    request_card_contents(selectedDate)
   },[url])
 
   const mockWeight = [...new Array(200).keys()]
@@ -79,6 +81,7 @@ export default function Training() {
 
   // Functions
 
+  // Card
   const addRecords = (index) => {
     const newActionsList = [...actionsList]
     newActionsList[index].values.push({
@@ -103,6 +106,23 @@ export default function Training() {
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
   }
 
+  const handleWeight = (weight) =>{
+    const [card_idx, value_idx] = actionsOffset
+    const newActionsList = [...actionsList]
+    newActionsList[card_idx].values[value_idx].weight = weight
+    request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setAnchorWeight(null)
+  }
+
+  const handleNum = (numbers) =>{
+    const [card_idx, value_idx] = actionsOffset
+    const newActionsList = [...actionsList]
+    newActionsList[card_idx].values[value_idx].numbers = numbers
+    request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setAnchorNum(null)
+  }
+
+  // Actions Lib
 	const openActionsLib = function(){
     axios.get('/actions-lib').then(res=>{
       setActionsLib(res.data)
@@ -142,29 +162,32 @@ export default function Training() {
 		closeActionsLib(1)
   }
 
-  // Handle Menu Items
-  const handleWeight = (weight) =>{
-    const [card_idx, value_idx] = actionsOffset
-    const newActionsList = [...actionsList]
-    // console.log(card_idx, value_idx)
-    // console.log(newActionsList)
-    // console.log(newActionsList[card_idx].values[value_idx])
-    newActionsList[card_idx].values[value_idx].weight = weight
-    request_append_actions(SET_ACTIONS_LIST, newActionsList);
-    setAnchorWeight(null)
-  }
-
-  const handleNum = (numbers) =>{
-    const [card_idx, value_idx] = actionsOffset
-    const newActionsList = [...actionsList]
-    newActionsList[card_idx].values[value_idx].numbers = numbers
-    request_append_actions(SET_ACTIONS_LIST, newActionsList);
-    setAnchorNum(null)
+  // Handle date picker
+  const closeDatePicker = () => {
+    setOpenDatePicker(false)
   }
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    const date_fr = moment(date).format("YYYY-MM-DD")
+    setSelectedDate(date_fr);
+    setOpenDatePicker(false);
+    request_card_contents(date_fr)
   };
+
+  const handleRenderDay = (day, selectedDate_, isInCurrentMonth, dayComponent) => {
+    // daysHaveActions
+    const formatted_day = parseInt(moment(day).format('D'))
+    if(isInCurrentMonth && daysHaveActions.includes(formatted_day)){
+      return <Badge variant="dot" className={classes.calendarStyle}>{dayComponent}</Badge>;
+    }
+    return dayComponent
+    
+  }
+
+  const handelMonthChange = (date) => {
+    const month = moment(String(date)).format("M")
+    request_days_have_actions(month)
+  }
 
   // Request
   const request_append_actions = (isSetActions, actions_list, timestamp='') => {
@@ -183,6 +206,36 @@ export default function Training() {
       }else{
         Alerts.show('Save failed...')
       }
+      
+    })
+  }
+
+  const request_card_contents = (date) => {
+    axios.get(url, {
+      params:{
+        datetime: date
+      }
+    }).then(res=>{
+      if(res && res.data){
+        setActionsList(res.data.mydata)
+      }
+    }).catch(e=>{
+      const status = e?.response?.status;
+      if (status === 401){
+        Alerts.show('Unauthorized...')
+      }else if(status === 404){
+        setActionsList([])
+      }else {
+        Alerts.show('Unknow error...')
+      }
+    })
+  }
+
+  const request_days_have_actions = (month) => {
+    const path = `/days-have-actions?date_month=${month}`
+    axios.get(path).then(resp => {
+      const days_list = resp.data;
+      setDaysHaveActions(days_list)
       
     })
   }
@@ -331,24 +384,29 @@ export default function Training() {
 			</Drawer>
 
       {/* Date picker */}
-
-
-
-			<div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
-            variant="inline"
+      <Dialog onClose={closeDatePicker} aria-labelledby="simple-dialog-title" open={openDatePicker}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <DatePicker
+            variant="static"
             margin="normal"
             id="date-picker-dialog"
             format="MM/dd/yyyy"
             value={selectedDate}
+            onMonthChange={handelMonthChange}
             onChange={handleDateChange}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
+            renderDay={handleRenderDay}
           />
-      </MuiPickersUtilsProvider>
+        </MuiPickersUtilsProvider>
+      </Dialog>
 
+			<div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+        <IconButton onClick={()=>{
+          const month = moment(selectedDate).format('M')
+          request_days_have_actions(month)
+          setOpenDatePicker(true)
+        }} size="medium">
+          <DateRangeIcon color="primary" size="large"/>
+        </IconButton>
         <IconButton onClick={openActionsLib} size="medium">
           <AddBoxIcon color="primary" size="large"/>
         </IconButton>

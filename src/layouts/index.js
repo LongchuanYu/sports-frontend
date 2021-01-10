@@ -9,7 +9,10 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import PollIcon from '@material-ui/icons/Poll';
+import PersonIcon from '@material-ui/icons/Person';
 import {blue, teal, purple, indigo, grey} from '@material-ui/core/colors';
+import myTheme from '@/utils/theme.json'
 
 const useStyles = makeStyles({
   root: {
@@ -32,11 +35,7 @@ function BasicLayout(props) {
   const pathname = props.location.pathname;
   const theme = createMuiTheme({
     palette: {
-      type: 'dark',
-      primary: {
-        main: '#00b7ff'
-      },
-      secondary: purple
+      type: 'dark'
     }
   });
 
@@ -63,8 +62,8 @@ function BasicLayout(props) {
         className={classes.root}
       >
         <BottomNavigationAction value={'/training'} label="训练" icon={<RestoreIcon />} />
-        <BottomNavigationAction value={'/data'} label="数据" icon={<FavoriteIcon />} />
-        <BottomNavigationAction value={'/myself'} label="我的" icon={<LocationOnIcon />} />
+        <BottomNavigationAction value={'/data'} label="数据" icon={<PollIcon />} />
+        <BottomNavigationAction value={'/myself'} label="我的" icon={<PersonIcon />} />
       </BottomNavigation>
       {props.children}
     </ThemeProvider>
