@@ -192,7 +192,7 @@ export default function Training() {
   // Request
   const request_append_actions = (isSetActions, actions_list, timestamp='') => {
     const message = {
-      timestamp: timestamp ? timestamp : moment().format("YYYY-MM-DD"),
+      timestamp: moment(selectedDate).format("YYYY-MM-DD"),
       mydata: actions_list
     }
     axios.post('/actions', message).then(resp=>{
