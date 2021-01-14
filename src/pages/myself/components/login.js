@@ -54,8 +54,8 @@ function LoginForm(props) {
       Alerts.show("Login success")
       dispatch({ type: 'login/login', payload: token })
     }).catch(e => {
-      console.log(e)
       const msg = e.response?.data?.error;
+      handleClose()
       if (msg) {
         Alerts.show(msg)
       } else {

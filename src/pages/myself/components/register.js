@@ -37,7 +37,8 @@ function RegisterForm() {
 	  Alerts.show("Register success.")
 	  setOpen(false)
     }).catch(e=>{
-      const msg = e.response.data.message;
+	  const msg = e.response.data.message;
+	  setOpen(false)
       if (msg){
         Alerts.show(msg);
       }else{

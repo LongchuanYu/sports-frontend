@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import axios from '../../axios/index.js'
 import styles from './index.css'
-import Alerts from '@/components/Alerts'
 import moment from 'moment'
+import Alerts from '@/components/Alerts'
 import {
 	CardContent, Card, IconButton, Drawer,
   List, ListItem, ListSubheader, Divider, Chip,
@@ -127,7 +127,7 @@ export default function Training() {
     axios.get('/actions-lib').then(res=>{
       setActionsLib(res.data)
     }).catch(e=>[
-      Alerts.show("Network error.")
+      Alerts.show("网络错误")
     ])
     setSelectedActionsLibIndex([])
 		setShowActionsLib(true)
@@ -202,9 +202,9 @@ export default function Training() {
     }).catch(e=>{
       const status = e?.response?.status;
       if (status === 401){
-        Alerts.show('Unauthorized error.')
+        Alerts.show('请登录')
       }else{
-        Alerts.show('Save failed...')
+        Alerts.show('保存失败')
       }
       
     })
@@ -222,11 +222,11 @@ export default function Training() {
     }).catch(e=>{
       const status = e?.response?.status;
       if (status === 401){
-        Alerts.show('Unauthorized...')
+        Alerts.show('请登录...')
       }else if(status === 404){
         setActionsList([])
       }else {
-        Alerts.show('Unknow error...')
+        Alerts.show('未知错误', 1500)
       }
     })
   }
