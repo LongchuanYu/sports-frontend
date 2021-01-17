@@ -1,8 +1,79 @@
+import classes from './index.css'
 import React, { useEffect } from 'react';
-function Data(){
-    return(
-        <div>Developing...</div>
-    )
+import {
+	AppBar, Tab, Tabs
+} from '@material-ui/core';
+
+import Charts from './components/Charts';
+import ActionsList from './components/ActionsList'
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+	tabStyle: {
+		minHeight: 'unset',
+		height: '36px',
+		'& .MuiTabs-flexContainer': {
+			height: '100%'
+		}
+	}
+});
+
+function Data() {
+	const classes = useStyles();
+
+	const [tabValue, setTabValue] = React.useState(2019);
+
+
+	// Tab
+	const handleTabChanged = (event, newValue) => {
+		setTabValue(newValue);
+	}
+
+	return (
+		<div>
+			{/* Header */}
+			<div 
+				className={`d-flex justify-content-center align-items-center`}
+				style={{
+					backgroundColor: "#4e4e4e",
+					height: "100px",
+					color: "#eee",
+					boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)"
+				}}
+			>
+				数据
+			</div>
+			<Tabs value={tabValue} 
+				className={classes.tabStyle}
+				onChange={handleTabChanged}
+				variant="scrollable"
+				scrollButtons="auto"
+			>
+				<Tab label="2016" value={2016}/>
+				<Tab label="2017" value={2017}/>
+				<Tab label="2018" value={2018}/>
+				<Tab label="2019" value={2019}/>
+				<Tab label="2020" value={2020}/>
+				<Tab label="2021" value={2021}/>
+				<Tab label="2022" value={2022}/>
+				<Tab label="2023" value={2023}/>
+				<Tab label="2024" value={2024}/>
+			</Tabs>
+
+			{/* Tab Panel	 */}
+			<div className={`container`} style={{}}>
+				{/* Charts */}
+				<Charts />
+
+				<ActionsList />
+
+
+				{/* Actions List */}
+
+			</div>
+
+		</div>
+	)
 }
 
 export default Data
