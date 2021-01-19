@@ -11,10 +11,15 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
 	tabStyle: {
 		minHeight: 'unset',
-		height: '36px',
 		'& .MuiTabs-flexContainer': {
 			height: '100%'
 		}
+	},
+	root: {
+		display: 'flex',
+		justifyContent: 'start',
+		flexDirection: 'column',
+		height: 'calc(100vh - 50px)'
 	}
 });
 
@@ -30,13 +35,13 @@ function Data() {
 	}
 
 	return (
-		<div>
+		<div className={classes.root}>
 			{/* Header */}
 			<div 
 				className={`d-flex justify-content-center align-items-center`}
 				style={{
 					backgroundColor: "#4e4e4e",
-					height: "100px",
+					height: "20%",
 					color: "#eee",
 					boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)"
 				}}
@@ -61,7 +66,9 @@ function Data() {
 			</Tabs>
 
 			{/* Tab Panel	 */}
-			<div className={`container`} style={{}}>
+			<div className={`container`} style={{
+				height: '100%'
+			}}>
 				{/* Charts */}
 				<Charts />
 
