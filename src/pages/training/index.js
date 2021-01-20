@@ -217,6 +217,7 @@ export default function Training() {
       }
     }).then(res=>{
       if(res && res.data){
+        console.log(res)
         setActionsList(res.data.mydata)
       }
     }).catch(e=>{
@@ -234,6 +235,7 @@ export default function Training() {
   const request_days_have_actions = (month) => {
     const path = `/days-have-actions?date_month=${month}`
     axios.get(path).then(resp => {
+      console.log(resp)
       const days_list = resp.data;
       setDaysHaveActions(days_list)
       

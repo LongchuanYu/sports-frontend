@@ -5,30 +5,8 @@ import { Button, Dialog, DialogTitle} from '@material-ui/core';
 import LoginForm from './components/login'
 import RegisterForm from './components/register'
 import Alerts from '@/components/Alerts';
-import {L2Dwidget} from 'live2d-widget'
 function Myself(props) {
   const { isLogin, username, dispatch } = props;
-
-  useEffect(() => {
-		console.log('hello')
-		setTimeout(() => {
-			L2Dwidget.init({
-				model:{
-					jsonPath: 'https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json',
-				},
-				mobile: {
-					"show": true,
-				},
-			})
-		}, 0);
-		return () => {
-			let live = document.getElementById('live2d-widget');
-			if(live){
-				live.remove()
-			}
-			
-		}
-  }, [])
   
   const test = () => {
     Alerts.show("hello")
