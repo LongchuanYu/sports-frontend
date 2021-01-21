@@ -243,7 +243,7 @@ export default function Training() {
   }
 
 	return (
-		<div className="container">
+		<div className={`container`} style={{marginBottom: '50px'}}>
       {actionsList && actionsList.length ? actionsList.map((item, index)=>{
         return (
           <Card className={`mb-3`} key={`card-${index}`}>

@@ -21,7 +21,8 @@ const useStyles = makeStyles({
     bottom: "0px",
     left: "0px",
     right: "0px",
-    marginBottom: "0px"
+    marginBottom: "0px",
+    zIndex: 1000
   },
 });
 
