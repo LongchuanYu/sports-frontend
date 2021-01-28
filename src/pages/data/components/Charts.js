@@ -8,14 +8,13 @@ import {
 import fake_chart from '@/utils/chart_fake.js'
 // capacity = 组数 × 次数 × 重量
 function Charts(props) {
-  console.log(props)
   const { value } = props;
   const config = {
-    data: fake_chart,
+    data: value,
     autoFit: true,
     padding: 'auto',
-    xField: 'Date',
-    yField: 'scales',
+    xField: 'date',
+    yField: 'capacity',
     xAxis: { tickCount: 5 },
     slider: {
       start: 0.0,

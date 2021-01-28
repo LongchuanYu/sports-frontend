@@ -22,7 +22,8 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function(response){
   return response
 },function(error){
-  const status = error.response.status;
+  console.log(error)
+  const status = error?.response?.status;
   switch(status){
     case 401:
       getDvaApp()._store.dispatch({

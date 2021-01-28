@@ -7,6 +7,8 @@ import {
 import Charts from './components/Charts';
 import ActionsList from './components/ActionsList'
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
+import axios from 'axios';
 
 const useStyles = makeStyles({
 	tabStyle: {
@@ -25,9 +27,21 @@ const useStyles = makeStyles({
 
 function Data() {
 	const classes = useStyles();
+	const [tabValue, setTabValue] = React.useState(moment().year());
+	const [dataMixin, setDataMixin] = React.useState({})
+	const [dataList, setDataList] = React.useState([])
 
-	const [tabValue, setTabValue] = React.useState(2019);
-
+	// useEffect
+	useEffect(() => {
+		console.log('start...')
+		axios.get(`/data-of-years/${parseInt(tabValue)}`).then(resp => {
+			console.log(resp)
+			setDataMixin(resp.data)
+			setDataList(resp.data.year_datas)
+		}).catch(e => {
+			console.log(e)
+		})
+	}, [])
 
 	// Tab
 	const handleTabChanged = (event, newValue) => {
@@ -54,15 +68,12 @@ function Data() {
 				variant="scrollable"
 				scrollButtons="auto"
 			>
-				<Tab label="2016" value={2016}/>
-				<Tab label="2017" value={2017}/>
-				<Tab label="2018" value={2018}/>
-				<Tab label="2019" value={2019}/>
-				<Tab label="2020" value={2020}/>
 				<Tab label="2021" value={2021}/>
 				<Tab label="2022" value={2022}/>
 				<Tab label="2023" value={2023}/>
 				<Tab label="2024" value={2024}/>
+				<Tab label="2025" value={2025}/>
+				<Tab label="2026" value={2026}/>
 			</Tabs>
 
 			{/* Tab Panel	 */}
@@ -70,7 +81,7 @@ function Data() {
 				height: '100%'
 			}}>
 				{/* Charts */}
-				<Charts />
+				<Charts value={dataList}/>
 
 				<ActionsList />
 

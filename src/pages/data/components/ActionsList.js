@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core';
 
 function ActionsList(props) {
-	console.log(props)
 	const { value } = props;
 	return (
 		<Card style={{ height: '40%', overflow: 'auto' }}>
