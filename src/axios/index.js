@@ -2,8 +2,8 @@ import axios from 'axios'
 import Alerts from '@/components/Alerts'
 import {getDvaApp} from 'umi'
 // axios.defaults.baseURL = 'http://192.168.1.143:5000/'
-axios.defaults.baseURL = 'http://0.0.0.0:5000/'
-// axios.defaults.baseURL = 'http://49.235.109.170:5000/'
+// axios.defaults.baseURL = 'http://0.0.0.0:5000/'
+axios.defaults.baseURL = 'http://49.235.109.170:5000/'
 
 axios.defaults.timeout = 5000
 
@@ -29,10 +29,10 @@ axios.interceptors.response.use(function(response){
       getDvaApp()._store.dispatch({
         type: 'login/logout'
       })
-    
+
   }
   return Promise.reject(error)
 })
-  
+
 export default axios
 
