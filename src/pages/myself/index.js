@@ -1,13 +1,13 @@
 import styles from './index.css'
-import React from 'react';
+import React, { useEffect } from 'react';
 import {connect} from 'dva'
 import { Button, Dialog, DialogTitle} from '@material-ui/core';
 import LoginForm from './components/login'
 import RegisterForm from './components/register'
 import Alerts from '@/components/Alerts';
-import moment from 'moment'
 function Myself(props) {
   const { isLogin, username, dispatch } = props;
+  
   const test = () => {
     Alerts.show("hello")
   }

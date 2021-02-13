@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import {connect} from 'dva'
+import { connect } from 'dva'
 import axios from '@/axios/index.js'
 import Alerts from '@/components/Alerts';
 import {
-	Button, Dialog, DialogTitle, DialogContent,
-	TextField, DialogActions, Snackbar
+  Button, Dialog, DialogTitle, DialogContent,
+  TextField, DialogActions, Snackbar
 } from '@material-ui/core';
 
 
@@ -22,78 +22,81 @@ function RegisterForm() {
   const [registerValue, setRegisterValue] = React.useState(initregisterValue)
   const [errorInfo, setErrorInfo] = React.useState(initErrorInfo)
 
-	const handleInputChanged = (event, type) => {
-    const newVal = {...registerValue}
+  const handleInputChanged = (event, type) => {
+    const newVal = { ...registerValue }
     newVal[type] = event.target.value;
     setRegisterValue(newVal)
   }
 
   const handleRegister = () => {
-    if (!registerValue.username || !registerValue.password){
+    if (!registerValue.username || !registerValue.password) {
+      setOpen(false)
       Alerts.show("Please input username or password");
       return;
     }
-    axios.post('/users', registerValue).then(resp=>{
-	  Alerts.show("Register success.")
-	  setOpen(false)
-    }).catch(e=>{
+    axios.post('/users', registerValue).then(resp => {
+      setOpen(false)
+      Alerts.show("Register success.")
+
+    }).catch(e => {
       const msg = e.response.data.message;
-      if (msg){
+      setOpen(false)
+      if (msg) {
         Alerts.show(msg);
-      }else{
+      } else {
         Alerts.show('Error');
       }
-      
+
     })
   }
 
-  return(
-		<div>
-			<Button
-				variant="contained"
-				size="small"
-				className={`mb-1`}
-				onClick={()=>{
+  return (
+    <div>
+      <Button
+        variant="contained"
+        size="small"
+        className={`mb-1`}
+        onClick={() => {
           setRegisterValue(initregisterValue)
           setOpen(true)
         }}
-			>
-				Register
+      >
+        Register
 			</Button>
-			<Dialog onClose={()=>setOpen(false)} aria-labelledby="simple-dialog-title" open={open}>
-				<form>
-					<DialogTitle id="form-dialog-title">Register</DialogTitle>
-					<DialogContent>
-						<TextField
+      <Dialog onClose={() => setOpen(false)} aria-labelledby="simple-dialog-title" open={open}>
+        <form>
+          <DialogTitle id="form-dialog-title">Register</DialogTitle>
+          <DialogContent>
+            <TextField
               error={errorInfo.usernameErr}
-							id="standard-username-input"
-							label="Username"
+              id="standard-username-input"
+              label="Username"
               value={registerValue.username}
-              onChange={(event)=>handleInputChanged(event, 'username')}
-							autoComplete="current-username"
-						/>
-						<TextField
+              onChange={(event) => handleInputChanged(event, 'username')}
+              autoComplete="current-username"
+            />
+            <TextField
               error={errorInfo.passwordErr}
-							id="standard-password-input"
-							label="Password"
-							type="password"
+              id="standard-password-input"
+              label="Password"
+              type="password"
               value={registerValue.password}
-              onChange={(event)=>handleInputChanged(event, 'password')}
-							autoComplete="current-password"
-						/>
-					</DialogContent>
-					<DialogActions>
-						<Button onClick={()=>{setOpen(false)}} color="primary">
-							Cancel
+              onChange={(event) => handleInputChanged(event, 'password')}
+              autoComplete="current-password"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => { setOpen(false) }} color="primary">
+              Cancel
 						</Button>
-						<Button onClick={handleRegister} color="primary">
-							OK
+            <Button onClick={handleRegister} color="primary">
+              OK
 						</Button>
-					</DialogActions>
-				</form>
-			</Dialog>
-		</div>
-	)
+          </DialogActions>
+        </form>
+      </Dialog>
+    </div>
+  )
 }
 
 export default RegisterForm;

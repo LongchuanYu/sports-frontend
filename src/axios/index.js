@@ -2,8 +2,8 @@ import axios from 'axios'
 import Alerts from '@/components/Alerts'
 import {getDvaApp} from 'umi'
 // axios.defaults.baseURL = 'http://192.168.1.143:5000/'
-// axios.defaults.baseURL = 'http://localhost:5000/'
-axios.defaults.baseURL = 'http://49.235.109.170:5000/'
+axios.defaults.baseURL = 'http://0.0.0.0:5000/'
+// axios.defaults.baseURL = 'http://49.235.109.170:5000/'
 
 axios.defaults.timeout = 5000
 
@@ -22,7 +22,8 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function(response){
   return response
 },function(error){
-  const status = error.response.status;
+  console.log(error)
+  const status = error?.response?.status;
   switch(status){
     case 401:
       getDvaApp()._store.dispatch({

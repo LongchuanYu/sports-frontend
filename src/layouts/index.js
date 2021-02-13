@@ -21,7 +21,8 @@ const useStyles = makeStyles({
     bottom: "0px",
     left: "0px",
     right: "0px",
-    marginBottom: "0px"
+    marginBottom: "0px",
+    zIndex: 1000
   },
 });
 
@@ -33,11 +34,13 @@ function BasicLayout(props) {
   const classes = useStyles();
   // 等于didMounted
   const pathname = props.location.pathname;
-  const theme = createMuiTheme({
-    palette: {
-      type: 'dark'
-    }
-  });
+  const theme = createMuiTheme(myTheme
+    // {
+    //   palette: {
+    //     type: "dark",
+    //   }
+    // }
+  );
 
   dispatch({type:"login/checkIsLogin"})
 

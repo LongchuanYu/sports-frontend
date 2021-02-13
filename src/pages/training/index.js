@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import axios from '../../axios/index.js'
 import styles from './index.css'
-import Alerts from '@/components/Alerts'
 import moment from 'moment'
+import Alerts from '@/components/Alerts'
 import {
 	CardContent, Card, IconButton, Drawer,
   List, ListItem, ListSubheader, Divider, Chip,
@@ -58,10 +58,12 @@ export default function Training() {
 
   // Card
   const [anchorWeight, setAnchorWeight] = React.useState(null);
+  const [lastWeight, setLastWeight] = React.useState(0);
   const [anchorNum, setAnchorNum] = React.useState(null);
+  const [lastNum, setLastNum] = React.useState(0);
   const openWeight = Boolean(anchorWeight);
   const openNum = Boolean(anchorNum);
-  
+
   // Date Picker
   const [openDatePicker, setOpenDatePicker] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState(moment().format("YYYY-MM-DD"));
@@ -77,7 +79,7 @@ export default function Training() {
   },[url])
 
   const mockWeight = [...new Array(200).keys()]
-  const mockNumbers = [5, 10, 15, 20, 25, 30, 35, 40]
+  const mockNumbers = [5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30, 35, 40]
 
   // Functions
 
@@ -85,8 +87,8 @@ export default function Training() {
   const addRecords = (index) => {
     const newActionsList = [...actionsList]
     newActionsList[index].values.push({
-      weight: 0,
-      numbers: 0
+      weight: lastWeight,
+      numbers: lastNum
     })
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
   }
@@ -111,6 +113,7 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].weight = weight
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setLastWeight(weight)
     setAnchorWeight(null)
   }
 
@@ -119,6 +122,7 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].numbers = numbers
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setLastNum(numbers)
     setAnchorNum(null)
   }
 
@@ -127,7 +131,7 @@ export default function Training() {
     axios.get('/actions-lib').then(res=>{
       setActionsLib(res.data)
     }).catch(e=>[
-      Alerts.show("Network error.")
+      Alerts.show("网络错误")
     ])
     setSelectedActionsLibIndex([])
 		setShowActionsLib(true)
@@ -181,10 +185,10 @@ export default function Training() {
       return <Badge variant="dot" className={classes.calendarStyle}>{dayComponent}</Badge>;
     }
     return dayComponent
-    
+
   }
 
-  const handelMonthChange = (date) => {
+  const handleMonthChange = (date) => {
     const month = moment(String(date)).format("M")
     request_days_have_actions(month)
   }
@@ -202,11 +206,11 @@ export default function Training() {
     }).catch(e=>{
       const status = e?.response?.status;
       if (status === 401){
-        Alerts.show('Unauthorized error.')
+        Alerts.show('请登录')
       }else{
-        Alerts.show('Save failed...')
+        Alerts.show('保存失败')
       }
-      
+
     })
   }
 
@@ -217,16 +221,17 @@ export default function Training() {
       }
     }).then(res=>{
       if(res && res.data){
+        console.log(res)
         setActionsList(res.data.mydata)
       }
     }).catch(e=>{
       const status = e?.response?.status;
       if (status === 401){
-        Alerts.show('Unauthorized...')
+        Alerts.show('请登录...')
       }else if(status === 404){
         setActionsList([])
       }else {
-        Alerts.show('Unknow error...')
+        Alerts.show('未知错误', 1500)
       }
     })
   }
@@ -234,14 +239,15 @@ export default function Training() {
   const request_days_have_actions = (month) => {
     const path = `/days-have-actions?date_month=${month}`
     axios.get(path).then(resp => {
+      console.log(resp)
       const days_list = resp.data;
       setDaysHaveActions(days_list)
-      
+
     })
   }
 
 	return (
-		<div className="container">
+		<div className={`container`} style={{marginBottom: '50px'}}>
       {actionsList && actionsList.length ? actionsList.map((item, index)=>{
         return (
           <Card className={`mb-3`} key={`card-${index}`}>
@@ -353,12 +359,12 @@ export default function Training() {
       </Menu>
 
 			<Drawer anchor="bottom" open={showActionsLib} onClose={()=>closeActionsLib(0)}>
-				<div>
+				<div style={{maxHeight: '300px'}}>
 					<List style={{minHeight: '200px'}}>
 						<li>
 							<ul style={{padding:0}}>
 								<ListSubheader style={{
-									background: 'inherited',
+									background: '#424242',
 									display:'flex', justifyContent: 'space-between', alignItems: 'center'
 								}}>
                   <Chip label={selectedActionsLibIndex.length} />
@@ -392,7 +398,7 @@ export default function Training() {
             id="date-picker-dialog"
             format="MM/dd/yyyy"
             value={selectedDate}
-            onMonthChange={handelMonthChange}
+            onMonthChange={handleMonthChange}
             onChange={handleDateChange}
             renderDay={handleRenderDay}
           />
