@@ -8,7 +8,7 @@ import Charts from './components/Charts';
 import ActionsList from './components/ActionsList'
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
-import axios from 'axios';
+import axios from '../../axios';
 
 const useStyles = makeStyles({
 	tabStyle: {
@@ -28,30 +28,38 @@ const useStyles = makeStyles({
 function Data() {
 	const classes = useStyles();
 	const [tabValue, setTabValue] = React.useState(moment().year());
-	const [dataMixin, setDataMixin] = React.useState({})
+	const [dataAction, setDataAction] = React.useState([])
 	const [dataList, setDataList] = React.useState([])
+  const [selectedIndex, setSelectedIndex] = React.useState(-1)
 
 	// useEffect
 	useEffect(() => {
-		console.log('start...')
-		axios.get(`/data-of-years/${parseInt(tabValue)}`).then(resp => {
-			console.log(resp)
-			setDataMixin(resp.data)
-			setDataList(resp.data.year_datas)
-		}).catch(e => {
-			console.log(e)
-		})
+    requestDataOfYears(tabValue)
 	}, [])
 
 	// Tab
 	const handleTabChanged = (event, newValue) => {
 		setTabValue(newValue);
+		setSelectedIndex(-1)
+    requestDataOfYears(newValue)
 	}
+
+	// request
+  function requestDataOfYears(year) {
+    axios.get(`/data-of-years/${parseInt(year)}`).then(resp => {
+      console.log(resp)
+      setDataAction(resp.data.action_datas)
+      setDataList(resp.data.year_datas)
+    }).catch(e => {
+      console.log('error')
+      console.log(e)
+    })
+  }
 
 	return (
 		<div className={classes.root}>
 			{/* Header */}
-			<div 
+			<div
 				className={`d-flex justify-content-center align-items-center`}
 				style={{
 					backgroundColor: "#4e4e4e",
@@ -62,7 +70,7 @@ function Data() {
 			>
 				数据
 			</div>
-			<Tabs value={tabValue} 
+			<Tabs value={tabValue}
 				className={classes.tabStyle}
 				onChange={handleTabChanged}
 				variant="scrollable"
@@ -83,10 +91,12 @@ function Data() {
 				{/* Charts */}
 				<Charts value={dataList}/>
 
-				<ActionsList />
-
-
-				{/* Actions List */}
+				<ActionsList
+          setDataList={(yearDataList) => setDataList(yearDataList)}
+          dataAction={dataAction}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={(index) => setSelectedIndex(index)}
+        />
 
 			</div>
 

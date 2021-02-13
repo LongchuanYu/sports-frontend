@@ -58,10 +58,12 @@ export default function Training() {
 
   // Card
   const [anchorWeight, setAnchorWeight] = React.useState(null);
+  const [lastWeight, setLastWeight] = React.useState(0);
   const [anchorNum, setAnchorNum] = React.useState(null);
+  const [lastNum, setLastNum] = React.useState(0);
   const openWeight = Boolean(anchorWeight);
   const openNum = Boolean(anchorNum);
-  
+
   // Date Picker
   const [openDatePicker, setOpenDatePicker] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState(moment().format("YYYY-MM-DD"));
@@ -77,7 +79,7 @@ export default function Training() {
   },[url])
 
   const mockWeight = [...new Array(200).keys()]
-  const mockNumbers = [5, 10, 15, 20, 25, 30, 35, 40]
+  const mockNumbers = [5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30, 35, 40]
 
   // Functions
 
@@ -85,8 +87,8 @@ export default function Training() {
   const addRecords = (index) => {
     const newActionsList = [...actionsList]
     newActionsList[index].values.push({
-      weight: 0,
-      numbers: 0
+      weight: lastWeight,
+      numbers: lastNum
     })
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
   }
@@ -111,6 +113,7 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].weight = weight
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setLastWeight(weight)
     setAnchorWeight(null)
   }
 
@@ -119,6 +122,7 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].numbers = numbers
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setLastNum(numbers)
     setAnchorNum(null)
   }
 
@@ -181,10 +185,10 @@ export default function Training() {
       return <Badge variant="dot" className={classes.calendarStyle}>{dayComponent}</Badge>;
     }
     return dayComponent
-    
+
   }
 
-  const handelMonthChange = (date) => {
+  const handleMonthChange = (date) => {
     const month = moment(String(date)).format("M")
     request_days_have_actions(month)
   }
@@ -206,7 +210,7 @@ export default function Training() {
       }else{
         Alerts.show('保存失败')
       }
-      
+
     })
   }
 
@@ -238,7 +242,7 @@ export default function Training() {
       console.log(resp)
       const days_list = resp.data;
       setDaysHaveActions(days_list)
-      
+
     })
   }
 
@@ -355,12 +359,12 @@ export default function Training() {
       </Menu>
 
 			<Drawer anchor="bottom" open={showActionsLib} onClose={()=>closeActionsLib(0)}>
-				<div>
+				<div style={{maxHeight: '300px'}}>
 					<List style={{minHeight: '200px'}}>
 						<li>
 							<ul style={{padding:0}}>
 								<ListSubheader style={{
-									background: 'inherited',
+									background: '#424242',
 									display:'flex', justifyContent: 'space-between', alignItems: 'center'
 								}}>
                   <Chip label={selectedActionsLibIndex.length} />
@@ -394,7 +398,7 @@ export default function Training() {
             id="date-picker-dialog"
             format="MM/dd/yyyy"
             value={selectedDate}
-            onMonthChange={handelMonthChange}
+            onMonthChange={handleMonthChange}
             onChange={handleDateChange}
             renderDay={handleRenderDay}
           />

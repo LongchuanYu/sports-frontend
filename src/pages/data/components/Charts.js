@@ -27,7 +27,7 @@ function Charts(props) {
   return (
     <Card className={`mb-2 mt-2`} style={{height: '55%'}}>
       <CardContent style={{height: '100%'}}>
-        <Line {...config}></Line>
+        <Line {...config}/>
       </CardContent>
     </Card>
   )
