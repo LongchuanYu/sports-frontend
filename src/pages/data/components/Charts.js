@@ -17,8 +17,8 @@ function Charts(props) {
     yField: 'capacity',
     xAxis: { tickCount: 5 },
     slider: {
-      start: 0.0,
-      end: 0.3,
+      start: 0.7,
+      end: 1,
       textStyle: {
         fill: '#0fd'
       }

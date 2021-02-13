@@ -21,6 +21,8 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import DoneIcon from '@material-ui/icons/Done';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 
+import Toast from '../../components/Toast';
+
 const useStyles = makeStyles({
   inputStyle: {
     width: '5.5rem',
@@ -58,9 +60,7 @@ export default function Training() {
 
   // Card
   const [anchorWeight, setAnchorWeight] = React.useState(null);
-  const [lastWeight, setLastWeight] = React.useState(0);
   const [anchorNum, setAnchorNum] = React.useState(null);
-  const [lastNum, setLastNum] = React.useState(0);
   const openWeight = Boolean(anchorWeight);
   const openNum = Boolean(anchorNum);
 
@@ -86,6 +86,14 @@ export default function Training() {
   // Card
   const addRecords = (index) => {
     const newActionsList = [...actionsList]
+    const valueList = actionsList[index].values
+    let lastWeight = 0,
+      lastNum = 0;
+    if(valueList.length){
+      lastWeight= valueList[valueList.length - 1].weight;
+      lastNum= valueList[valueList.length - 1].numbers;
+    }
+    console.log(valueList)
     newActionsList[index].values.push({
       weight: lastWeight,
       numbers: lastNum
@@ -113,7 +121,6 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].weight = weight
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
-    setLastWeight(weight)
     setAnchorWeight(null)
   }
 
@@ -122,7 +129,6 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].numbers = numbers
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
-    setLastNum(numbers)
     setAnchorNum(null)
   }
 
@@ -131,7 +137,7 @@ export default function Training() {
     axios.get('/actions-lib').then(res=>{
       setActionsLib(res.data)
     }).catch(e=>[
-      Alerts.show("网络错误")
+      Toast.info("网络错误")
     ])
     setSelectedActionsLibIndex([])
 		setShowActionsLib(true)
@@ -206,9 +212,9 @@ export default function Training() {
     }).catch(e=>{
       const status = e?.response?.status;
       if (status === 401){
-        Alerts.show('请登录')
+        Toast.info('请登录')
       }else{
-        Alerts.show('保存失败')
+        Toast.info('保存失败')
       }
 
     })
@@ -227,11 +233,11 @@ export default function Training() {
     }).catch(e=>{
       const status = e?.response?.status;
       if (status === 401){
-        Alerts.show('请登录...')
+        Toast.info('请登录...')
       }else if(status === 404){
         setActionsList([])
       }else {
-        Alerts.show('未知错误', 1500)
+        Toast.info('未知错误')
       }
     })
   }

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva'
 import axios from '@/axios/index.js'
-import Alerts from '@/components/Alerts';
+import Toast from '@/components/Toast';
 import {
   Button, Dialog, DialogTitle, DialogContent,
   TextField, DialogActions, Snackbar
@@ -31,20 +31,20 @@ function RegisterForm() {
   const handleRegister = () => {
     if (!registerValue.username || !registerValue.password) {
       setOpen(false)
-      Alerts.show("Please input username or password");
+      Toast.info("Please input username or password");
       return;
     }
     axios.post('/users', registerValue).then(resp => {
       setOpen(false)
-      Alerts.show("Register success.")
+      Toast.info("Register success.")
 
     }).catch(e => {
       const msg = e.response.data.message;
       setOpen(false)
       if (msg) {
-        Alerts.show(msg);
+        Toast.info(msg);
       } else {
-        Alerts.show('Error');
+        Toast.info('Error');
       }
 
     })

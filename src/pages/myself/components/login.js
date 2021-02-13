@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva'
 import axios from '@/axios/index.js'
-import Alerts from '@/components/Alerts';
+import Toast from '@/components/Toast';
 import {
   Button, Dialog, DialogTitle, DialogContent,
   TextField, DialogActions, Snackbar
@@ -51,15 +51,15 @@ function LoginForm(props) {
     }).then(resp => {
       let {token} = resp.data;
       setOpen(false)
-      Alerts.show("Login success")
+      Toast.info("Login success")
       dispatch({ type: 'login/login', payload: token })
     }).catch(e => {
       const msg = e.response?.data?.error;
       handleClose()
       if (msg) {
-        Alerts.show(msg)
+        Toast.info(msg)
       } else {
-        Alerts.show("Login error.")
+        Toast.info("Login error.")
       }
 
     })

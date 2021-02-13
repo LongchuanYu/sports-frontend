@@ -4,12 +4,12 @@ import {connect} from 'dva'
 import { Button, Dialog, DialogTitle} from '@material-ui/core';
 import LoginForm from './components/login'
 import RegisterForm from './components/register'
-import Alerts from '@/components/Alerts';
+import Toast from '../../components/Toast';
 function Myself(props) {
   const { isLogin, username, dispatch } = props;
-  
+
   const test = () => {
-    Alerts.show("hello")
+    Toast.info("hello")
   }
   return (
     <div className={`container`}>
