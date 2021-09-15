@@ -417,6 +417,12 @@ export default function Training() {
           <AddBoxIcon color="primary" size="large"/>
         </IconButton>
 			</div>
+      <div className={styles['register-info-container']} style={{color:'#999'}}>
+        <div className={styles['register-info']}>
+          <p>©2021 LiYang All Rights Reserved</p>
+          <p>黔ICP备19006556号-1</p>
+        </div>
+      </div>
 		</div>
 	)
 }
