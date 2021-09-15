@@ -60,7 +60,9 @@ export default function Training() {
 
   // Card
   const [anchorWeight, setAnchorWeight] = React.useState(null);
+  const [lastWeight, setLastWeight] = React.useState(0);
   const [anchorNum, setAnchorNum] = React.useState(null);
+  const [lastNum, setLastNum] = React.useState(0);
   const openWeight = Boolean(anchorWeight);
   const openNum = Boolean(anchorNum);
 
@@ -121,6 +123,7 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].weight = weight
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setLastWeight(weight)
     setAnchorWeight(null)
   }
 
@@ -129,6 +132,7 @@ export default function Training() {
     const newActionsList = [...actionsList]
     newActionsList[card_idx].values[value_idx].numbers = numbers
     request_append_actions(SET_ACTIONS_LIST, newActionsList);
+    setLastNum(numbers)
     setAnchorNum(null)
   }
 
@@ -423,6 +427,12 @@ export default function Training() {
           <AddBoxIcon color="primary" size="large"/>
         </IconButton>
 			</div>
+      <div className={styles['register-info-container']} style={{color:'#999'}}>
+        <div className={styles['register-info']}>
+          <p>©2021 LiYang All Rights Reserved</p>
+          <p>黔ICP备19006556号-1</p>
+        </div>
+      </div>
 		</div>
 	)
 }
